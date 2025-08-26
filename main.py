@@ -8,11 +8,20 @@ def main():
     # Initialize parser
     vim_parser.initialize()
     
-    # Setup callback connection:
+    # Setup callback connection
     def setup_logger_callback(ui_callback):
-        logger.start_logging(ui_callback)
-
-    # Start UI last (blocking call)
+        # Store the UI callback first
+        logger._ui_callback = ui_callback
+        
+        # Now attach vim parser to logger (it can access the UI callback)
+        parsing_callback = vim_parser.attach_to_logger(logger)
+        
+        # Set the parsing callback and start listener
+        logger.set_key_callback(parsing_callback)
+        logger.key_capture.listener.start()
+    
+    # Start UI (which will start logging with vim parsing)
+    print("Initializing GUI")
     ui.start_ui(setup_logger_callback)
 
 if __name__ == "__main__":
