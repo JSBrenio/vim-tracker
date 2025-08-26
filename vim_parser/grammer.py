@@ -1,6 +1,27 @@
 from dataclasses import dataclass
 from typing import Optional
-
+from .constants import (
+    STATES,
+    BASIC_OPERATORS,
+    G_OPERATORS,
+    Z_OPERATORS,
+    BASIC_MOTIONS,
+    SEARCH_CHARACTER_MOTIONS,
+    G_MOTIONS,
+    CTRL_COMMANDS,
+    DOUBLE_KEY_COMMANDS,
+    TEXT_OBJECT_PREFIXES,
+    TEXT_OBJECT_TARGETS,
+    VIM_MODES,
+    MODE_KEYS,
+    COMMAND_COMMANDS,
+    SPECIAL_KEYS,
+    REGISTER_PREFIXES,
+    REGISTER_NAMES,
+    MARK_PREFIX,
+    MARK_NAMES,
+    NUMERIC_KEYS,
+)
 """
 VIM Structure:
 Formal Language: regular
@@ -64,11 +85,39 @@ Examples
 """
 @dataclass
 class VimCommand:
-    count: Optional[int]
-    operator: Optional[int]
-    motion: Optional[int]
-    text_object: Optional[int]
+    count: Optional[int] = None
+    operator: Optional[str] = None
+    motion: Optional[str] = None
+    text_object: Optional[str] = None
+    register: Optional[str] = None
+    target_char: Optional[str] = None
+    
+    def is_complete(self) -> bool:
+        """Check if command has enough parts to execute"""
+        if self.operator and (self.motion or self.text_object):
+            return True
+        if self.motion and not self.operator:  # Pure motion
+            return True
+        return False
+    def __str__(self):
+      cmd = []
+      description = []
+      for part in (self.count, self.operator, self.motion, self.text_object, self.register, self.target_char):
+        if part is None:
+          continue
+        cmd.append(str(part))
+      return "".join(cmd)
+@dataclass
+class VimError:
+    buffer: str
+    reason: str
+    suggestion: Optional[str] = None
 
     def __str__(self):
-        pass
+        s = f"Error: {self.buffer} → {self.reason}"
+        if self.suggestion:
+            s += f" (Did you mean: {self.suggestion}?)"
+        return s
+  
+
     
