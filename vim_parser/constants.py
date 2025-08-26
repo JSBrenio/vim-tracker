@@ -68,11 +68,6 @@ BASIC_MOTIONS = {
     "-": "first character of previous line",
     "_": "first non-blank of current line",
     
-    # Character navigation requiring a second character
-    "f": "find character forward",
-    "F": "find character backward",
-    "t": "till character forward",
-    "T": "till character backward",
     ";": "repeat last f, F, t, T",
     ",": "repeat last f, F, t, T in opposite direction",
     
@@ -91,6 +86,14 @@ BASIC_MOTIONS = {
     "#": "search word under cursor backward",
     "n": "repeat search",
     "N": "repeat search in opposite direction"
+}
+
+# Character navigation requiring a second character
+SEARCH_CHARACTER_MOTIONS = {
+    "f": "find character forward",
+    "F": "find character backward",
+    "t": "till character forward",
+    "T": "till character backward",
 }
 
 # G-prefixed motions (after pressing 'g')
