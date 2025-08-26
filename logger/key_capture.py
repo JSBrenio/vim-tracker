@@ -1,24 +1,26 @@
 from pynput import keyboard
 
-"""snippet code from official pynput docs: https://pynput.readthedocs.io/en/latest/keyboard.html"""
+# Global callback for key events
+_key_callback = None
+
+def set_callback(callback_func):
+    """Set the callback function to receive key events"""
+    global _key_callback
+    _key_callback = callback_func
 
 def on_press(key):
     try:
-        print('alphanumeric key {0} pressed'.format(
-            key.char))
+        key_str = key.char
+        event = f"alphanumeric key {key_str} pressed"
     except AttributeError:
-        print('special key {0} pressed'.format(
-            key))
-
-def on_release(key):
-    print('{0} released'.format(
-        key))
-    if key == keyboard.Key.esc:
-        # Stop listener
-        return False
+        key_str = str(key)
+        event = f"special key {key_str} pressed"
+    
+    # Send to callback if set
+    if _key_callback:
+        _key_callback('press', key_str, event)
 
 # ...or, in a non-blocking fashion:
 # A keyboard listener is a threading.Thread, and all callbacks will be invoked from the thread.
 listener = keyboard.Listener(
-    on_press=on_press,
-    on_release=on_release)
+    on_press=on_press)

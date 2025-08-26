@@ -8,11 +8,12 @@ def main():
     # Initialize parser
     vim_parser.initialize()
     
-    # Start logging first (non-blocking)
-    logger.start_logging()
-    
+    # Setup callback connection:
+    def setup_logger_callback(ui_callback):
+        logger.start_logging(ui_callback)
+
     # Start UI last (blocking call)
-    ui.start_ui()
+    ui.start_ui(setup_logger_callback)
 
 if __name__ == "__main__":
     main()

@@ -1,5 +1,5 @@
 from . import dashboard
 
-def start_ui():
-    """Launch the dashboard UI"""
-    dashboard.launch()
+def start_ui(setup_callback=None):
+    """Start the dashboard UI with optional setup callback"""
+    dashboard.launch(setup_callback)
