@@ -60,6 +60,12 @@ BASIC_MOTIONS = {
     "b": "word backward",
     "B": "WORD backward",
     
+    # Single movements
+    "h": "left",
+    "j": "down",
+    "k": "up",
+    "l": "right",
+    
     # Line navigation
     "0": "line start",
     "^": "first non-blank character",
@@ -299,7 +305,10 @@ MARK_NAMES = {
     "y": "mark y",
     "z": "mark z",
     
-    # Uppercase marks (global) - continue after A/B/C entries below
+    # Uppercase marks (global)
+    "A": "global mark A",
+    "B": "global mark B",
+    "C": "global mark C",
     "D": "global mark D",
     "E": "global mark E",
     "F": "global mark F",
@@ -323,14 +332,7 @@ MARK_NAMES = {
     "X": "global mark X",
     "Y": "global mark Y",
     "Z": "global mark Z",
-    # ...and so on for all lowercase letters
-    
-    # Uppercase marks (global)
-    "A": "global mark A",
-    "B": "global mark B",
-    "C": "global mark C",
-    # ...and so on for all uppercase letters
-    
+
     # Special marks
     ".": "position where last change occurred",
     "^": "position where last insertion stopped",
