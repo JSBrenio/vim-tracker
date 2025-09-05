@@ -1,6 +1,6 @@
 import vim_parser
 import logger
-import ui
+import gui
 
 def main():
     print("Starting Vim Tracker...")
@@ -22,7 +22,7 @@ def main():
     
     # Start UI (which will start logging with vim parsing)
     print("Initializing GUI")
-    ui.start_ui(setup_logger_callback)
+    gui.start_gui(setup_logger_callback)
 
 if __name__ == "__main__":
     main()
