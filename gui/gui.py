@@ -1,15 +1,15 @@
 import tkinter as tk
 from tkinter import scrolledtext
 
-class Dashboard:
+class GUI:
     def __init__(self):
         self.root = tk.Tk()
-        self.root.title("Vim Tracker Dashboard")
+        self.root.title("Vim Tracker GUI")
         self.setup_ui()
         
     def setup_ui(self):
         # Title
-        title = tk.Label(self.root, text="Vim Tracker Dashboard", font=('Arial', 16, 'bold'))
+        title = tk.Label(self.root, text="Vim Tracker GUI", font=('Arial', 16, 'bold'))
         title.pack(pady=10)
         
         # Key log display
@@ -32,6 +32,7 @@ class Dashboard:
         
     def _update_display(self, event_type, key, description):
         """Update the appropriate display (thread-safe)"""
+        # print(key)
         if event_type == 'command':
             self.cmd_log.insert(tk.END, f"{description}\n")
             self.cmd_log.see(tk.END)
@@ -43,9 +44,3 @@ class Dashboard:
     def run(self):
         """Start the GUI main loop"""
         self.root.mainloop()
-
-def launch(key_callback=None):
-    dashboard = Dashboard()
-    if key_callback:
-        key_callback(dashboard.on_key_event)
-    dashboard.run()

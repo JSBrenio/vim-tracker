@@ -1,4 +1,4 @@
-from typing import Optional
+from collections.abc import Callable
 from vim_parser.grammer import (VimCommand, VimError)
 from enum import Enum, auto
 from .constants import (
@@ -51,8 +51,8 @@ class State(Enum):
     def __str__(self):
         return self.name
 class VimParser:
-    def __init__(self, callback: Optional[callable] = None):
-        self.callback = callback
+    def __init__(self, gui_callback: Callable | None = None):
+        self.gui_callback = gui_callback
         self.reset()
 
     def reset(self):
@@ -65,7 +65,7 @@ class VimParser:
         self.waiting_for_char = None  # For f/F/t/T commands
         self.buffer = []  # keystroke buffer
         
-    def feed(self, key: str) -> Optional[VimCommand]:
+    def feed(self, key: str) -> VimCommand | VimError | None:
         """Feed a single keystroke and return complete command if ready"""
 
         self.buffer.append(key)
@@ -84,7 +84,7 @@ class VimParser:
                 self.reset()
                 return error
     
-    def _handle_normal(self, key: str):
+    def _handle_normal(self, key: str) -> VimCommand | VimError | None:
         """Normal Vim commands """
         # Handle count (digits)
         if key in NUMERIC_KEYS and key != "0":  # 0 is motion, not count at start
@@ -126,7 +126,7 @@ class VimParser:
         self.reset()
         return error
     
-    def _handle_register(self, key: str) -> Optional[VimCommand]:
+    def _handle_register(self, key: str) -> VimCommand | None:
         if key in REGISTER_NAMES:
             self.register = key
             self.state = "NORMAL"
@@ -135,13 +135,13 @@ class VimParser:
             self.reset()
             return None
     
-    def _handle_character_target(self, key: str) -> Optional[VimCommand]:
+    def _handle_character_target(self, key: str) -> VimCommand | None:
         # Any character can be a target for f/F/t/T
         self.motion = self.waiting_for_char
         command = self._create_command(target_char=key)
         return command
     
-    def _handle_text_object(self, key: str) -> Optional[VimCommand]:
+    def _handle_text_object(self, key: str) -> VimCommand | None:
         if key in TEXT_OBJECT_TARGETS:
             self.text_object += key  # Combine prefix + target (e.g., "i" + "w" = "iw")
             return self._create_command()
@@ -162,9 +162,9 @@ class VimParser:
             target_char=kwargs.get('target_char')
         )
         
-        # Call callback if provided
-        if self.callback and command.is_complete():
-            self.callback(command)
+        # Call gui_callback if provided
+        if self.gui_callback and command.is_complete():
+            self.gui_callback("command", command, command)
         
         self.reset()
         return command if command.is_complete() else None

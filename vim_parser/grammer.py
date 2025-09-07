@@ -99,6 +99,7 @@ class VimCommand:
         if self.motion and not self.operator:  # Pure motion
             return True
         return False
+      
     def __str__(self):
       cmd = []
       description = []
