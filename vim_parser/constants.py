@@ -1,18 +1,3 @@
-# FSM States
-STATES = {
-    "NORMAL": "Normal mode, waiting for command",
-    "OPERATOR_PENDING": "Operator entered, waiting for motion or text object",
-    "COUNT_PENDING": "Reading a numeric count",
-    "WAITING_FOR_CHAR": "Waiting for character after f/F/t/T",
-    "G_PREFIX": "g prefix entered, waiting for next keystroke",
-    "Z_PREFIX": "z prefix entered, waiting for next keystroke",
-    "VISUAL": "Visual mode selection",
-    "INSERT": "Insert mode",
-    "COMMAND": "Command mode (after : key)",
-    "REGISTER": "After \" key, waiting for register name",
-    "SEARCH": "Search mode (after / or ?)"
-}
-
 # Single-key operators that need a motion/text object
 BASIC_OPERATORS = {
     "d": "delete",

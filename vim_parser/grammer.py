@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from .constants import (
-    STATES,
     BASIC_OPERATORS,
     G_OPERATORS,
     Z_OPERATORS,

@@ -2,7 +2,6 @@ from collections.abc import Callable
 from vim_parser.grammer import (VimCommand, VimError)
 from enum import Enum, auto
 from .constants import (
-    STATES,
     BASIC_OPERATORS,
     G_OPERATORS,
     Z_OPERATORS,
@@ -51,19 +50,30 @@ Parser needs:
     check each case for a valid vim
     if valid vim command -> return VimCommand object
 """
+
 class State(Enum):
-    NORMAL = auto()
-    OPERATOR_PENDING = auto()
-    REGISTER = auto()
-    WAITING_FOR_REGISTER = auto()
-    WAITING_FOR_CHAR = auto()
-    WAITING_FOR_TEXT_OBJECT = auto()
-    INSERT = auto()
-    VISUAL = auto()
-    COMMAND = auto()
+    NORMAL = ("Normal mode, waiting for command")
+    OPERATOR_PENDING = ("Operator entered, waiting for motion or text object")
+    COUNT_PENDING = ("Reading a numeric count")
+    REGISTER = ("After \" key, waiting for register name")
+    WAITING_FOR_REGISTER = ("Reading register selection")
+    WAITING_FOR_CHAR = ("Waiting for character after f/F/t/T")
+    WAITING_FOR_TEXT_OBJECT = ("Waiting for text object target")
+    G_PREFIX = ("g prefix entered, waiting for next keystroke")
+    Z_PREFIX = ("z prefix entered, waiting for next keystroke")
+    INSERT = ("Insert mode")
+    VISUAL = ("Visual mode selection")
+    COMMAND = ("Command mode (after : key)")
+    SEARCH = ("Search mode (after / or ?)")
+
+    def __init__(self, description):
+        self.description = description
 
     def __str__(self):
         return self.name
+
+    def __repr__(self):
+        return f"{self.name}: {self.description}"
 
 class VimParser:
 
@@ -148,7 +158,7 @@ class VimParser:
     def _handle_register(self, key: str) -> VimCommand | None:
         if key in REGISTER_NAMES:
             self.register = key
-            self.state = "NORMAL"
+            self.state = State.NORMAL
             return None
         else:
             self.reset()
