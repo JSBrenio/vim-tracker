@@ -8,8 +8,8 @@ def main():
     gui = GUI()
     parser = VimParser(gui_callback=gui.on_key_event) # parser pushes to GUI
     logger = Logger(
-        gui_callback=gui.on_key_event,
-        parser_callback=parser.feed) # logger pushes to parser and GUI
+        gui_callback=gui.on_key_event, # logger pushes to GUI
+        parser_callback=parser.feed) # logger pushes to parser
 
     # threaded
     logger.start()

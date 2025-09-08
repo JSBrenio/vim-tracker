@@ -24,6 +24,20 @@ from .constants import (
     NUMERIC_KEYS,
 )
 
+# Combine all relevant dictionaries
+all_commands = {
+    **BASIC_OPERATORS,
+    **G_OPERATORS, 
+    **Z_OPERATORS,
+    **BASIC_MOTIONS,
+    **G_MOTIONS,
+    **SEARCH_CHARACTER_MOTIONS,
+    **TEXT_OBJECT_PREFIXES,
+    **TEXT_OBJECT_TARGETS,
+    # **CTRL_COMMANDS,
+    **SPECIAL_KEYS
+}
+
 """
 Finite State Machine
     [operator] [count] [motion | text-object]
@@ -50,7 +64,9 @@ class State(Enum):
 
     def __str__(self):
         return self.name
+
 class VimParser:
+
     def __init__(self, gui_callback: Callable | None = None):
         self.gui_callback = gui_callback
         self.reset()
@@ -70,6 +86,9 @@ class VimParser:
 
         self.buffer.append(key)
         
+        if self.gui_callback:
+            self.gui_callback("current_command", "".join(self.buffer), None)
+             
         match self.state:
             case State.NORMAL:
                 return self._handle_normal(key)
@@ -91,6 +110,11 @@ class VimParser:
             self.count += key
             return None
         
+        # Handle basic motions
+        if key in BASIC_MOTIONS:
+            self.motion = key
+            return self._create_command()
+
         # Handle register prefix
         if key in REGISTER_PREFIXES:
             self.state = State.WAITING_FOR_REGISTER
@@ -109,11 +133,6 @@ class VimParser:
             self.waiting_for_char = key
             self.state = State.WAITING_FOR_CHAR
             return None
-        
-        # Handle basic motions
-        if key in BASIC_MOTIONS:
-            self.motion = key
-            return self._create_command()
         
         # Handle text object prefixes (i/a) Text objects need an operator
         if key in TEXT_OBJECT_PREFIXES and self.operator:
@@ -164,7 +183,16 @@ class VimParser:
         
         # Call gui_callback if provided
         if self.gui_callback and command.is_complete():
-            self.gui_callback("command", command, command)
+            description = []
+
+            for ch in self.buffer:
+                if ch in all_commands:
+                    description.append(all_commands[ch])
+                else:
+                    description.append(f"'{ch}'")
+
+            self.gui_callback("command", command, " ".join(description))
+            self.gui_callback("current_command", "".join(self.buffer), " ".join(description))
         
         self.reset()
         return command if command.is_complete() else None

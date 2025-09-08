@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import Optional
 from .constants import (
     STATES,
     BASIC_OPERATORS,
@@ -85,12 +84,12 @@ Examples
 """
 @dataclass
 class VimCommand:
-    count: Optional[int] = None
-    operator: Optional[str] = None
-    motion: Optional[str] = None
-    text_object: Optional[str] = None
-    register: Optional[str] = None
-    target_char: Optional[str] = None
+    count: int | None = None
+    operator: str | None = None
+    motion: str | None = None
+    text_object: str | None = None
+    register: str | None = None
+    target_char: str | None = None
     
     def is_complete(self) -> bool:
         """Check if command has enough parts to execute"""
@@ -99,10 +98,9 @@ class VimCommand:
         if self.motion and not self.operator:  # Pure motion
             return True
         return False
-      
+
     def __str__(self):
       cmd = []
-      description = []
       for part in (self.count, self.operator, self.motion, self.text_object, self.register, self.target_char):
         if part is None:
           continue
@@ -112,7 +110,7 @@ class VimCommand:
 class VimError:
     buffer: str
     reason: str
-    suggestion: Optional[str] = None
+    suggestion: str | None = None
 
     def __str__(self):
         s = f"Error: {self.buffer} → {self.reason}"

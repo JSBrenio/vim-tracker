@@ -66,6 +66,9 @@ BASIC_MOTIONS = {
     "k": "up",
     "l": "right",
     
+    "p": "paste after cursor",
+    "P": "paste before cursor",
+    
     # Line navigation
     "0": "line start",
     "^": "first non-blank character",
