@@ -50,10 +50,12 @@ class GUI:
                 self.current_command.config(text=f"{key} - {description}")
             else:
                 self.current_command.config(text=key)
-        else:
+        elif event_type == 'press':
             # Handle raw key events (press/release)
             self.key_log.insert(tk.END, f"{description}\n")
             self.key_log.see(tk.END)
+        else:
+            raise Exception("UNEXPECTED EVENT")
         
     def run(self):
         """Start the GUI main loop"""
