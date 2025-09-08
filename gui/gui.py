@@ -36,7 +36,7 @@ class GUI:
         self.cmd_log.pack(padx=20, pady=5)
         
     def on_key_event(self, event_type, key, description):
-        """Callback function to receive events from logger"""
+        """Callback function to receive events from logger or parser"""
         self.root.after(0, lambda: self._update_display(event_type, key, description))
         
     def _update_display(self, event_type, key, description):
